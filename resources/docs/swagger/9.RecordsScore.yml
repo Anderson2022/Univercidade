@@ -1,0 +1,222 @@
+{
+  "/score": {
+    "get": {
+      "tags": [
+        "Students Points"
+      ],
+      "summary": "Listar pontos dos estudantes",
+      "description": "Retorna uma lista com os pontos dos estudantes",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "student_id": {
+                      "type": "number",
+                      "description": "ID do estudante"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome do estudante"
+                    },
+                    "requirements": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "requirement_id": {
+                            "type": "number",
+                            "description": "ID do requisito"
+                          },
+                          "points": {
+                            "type": "number",
+                            "description": "Pontuação do requisito"
+                          }
+                        }
+                      }
+                    },
+                    "totalValue": {
+                      "type": "number",
+                      "description": "Valor total dos pontos do estudante"
+                    }
+                  }
+                }
+              },
+              "example": [
+                {
+                  "student_id": 1,
+                  "name": "Anderson Da Silva Fernandes",
+                  "requirements": [
+                    {
+                      "requirement_id": 12,
+                      "points": 10
+                    },
+                    {
+                      "requirement_id": 6,
+                      "points": 4
+                    },
+                    {
+                      "requirement_id": 9,
+                      "points": 10
+                    }
+                  ],
+                  "totalValue": 24
+                }
+              ]
+            }
+          }
+        },
+        "401": {
+          "$ref": "#/components/responses/Unauthorized"
+        },
+        "403": {
+          "$ref": "#/components/responses/Forbidden"
+        },
+        "500": {
+          "$ref": "#/components/responses/InternalServerError"
+        }
+      }
+    },
+
+  },
+   "/scorePoints": {
+   "get": {
+      "tags": ["Students Points"],
+      "summary": "Lista os pontos dos alunos",
+      "security": [{"bearerAuth": []}],
+      "responses": {
+        "200": {
+          "description": "Lista de pontos dos alunos",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "student_id": {
+                      "type": "integer",
+                      "description": "ID do estudante"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome do estudante"
+                    },
+                    "requirements": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "requirements_id": {
+                            "type": "integer",
+                            "description": "ID do requisito"
+                          },
+                          "points": {
+                            "type": "integer",
+                            "description": "Pontos obtidos no requisito"
+                          }
+                        }
+                      }
+                    },
+                    "totalValue": {
+                      "type": "integer",
+                      "description": "Total de pontos obtidos pelo estudante"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "$ref": "#/components/responses/Unauthorized"
+        }
+      }
+    }
+  },
+
+   "scorePoints/:id": {
+    "get": {
+     "tags": ["Students Points"],
+      "summary": "Mostra as pontuações de um estudante específico",
+      "description": "",
+      "operationId": "getStudentPoints",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID do estudante",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Pontuações do estudante retornadas com sucesso",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "student_id": {
+                      "type": "integer",
+                      "description": "ID do estudante"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome do estudante"
+                    },
+                    "requirements": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "requirement_id": {
+                            "type": "integer",
+                            "description": "ID do requisito"
+                          },
+                          "points": {
+                            "type": "integer",
+                            "description": "Pontuação obtida"
+                          }
+                        }
+                      }
+                    },
+                    "totalValue": {
+                      "type": "integer",
+                      "description": "Total de pontos obtidos pelo estudante"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Não autorizado"
+        },
+        "403": {
+          "description": "Acesso negado"
+        },
+        "404": {
+          "description": "Não encontrado"
+        }
+      }
+    }
+  },
+
+}

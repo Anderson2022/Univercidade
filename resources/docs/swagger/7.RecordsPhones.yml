@@ -1,0 +1,178 @@
+{
+  "/cell/:phones": {
+    "post": {
+      "summary": "Envia código de verificação por mensagem de WhatsApp",
+      "tags": [
+        "Auth/Verify"
+      ],
+      "parameters": [
+        {
+          "name": "phones",
+          "in": "query",
+          "required": true,
+          "description": "Número de telefone do usuário (apenas números, sem espaços ou caracteres especiais)",
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{11,12}$"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Código de verificação enviado com sucesso",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "Status da operação"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Requisição inválida. Número de telefone informado é inválido",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "errors": {
+                    "type": "array",
+                    "description": "Lista de erros retornados",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Código de erro"
+                        },
+                        "message": {
+                          "type": "string",
+                          "description": "Mensagem de erro"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro interno do servidor. Falha ao criar registro de número de telefone",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "errors": {
+                    "type": "array",
+                    "description": "Lista de erros retornados",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Código de erro"
+                        },
+                        "message": {
+                          "type": "string",
+                          "description": "Mensagem de erro"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+
+  "/checked/:phones": {
+    "parameters": [
+      {
+        "name": "phones",
+        "in": "path",
+        "required": true,
+        "description": "O número de telefone a ser verificado",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]{11,12}$"
+        }
+      },
+      {
+        "name": "code",
+        "in": "query",
+        "required": true,
+        "description": "O código de verificação de 4 dígitos enviado por mensagem",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]{4}$"
+        }
+      }
+    ],
+    "post": {
+   "tags": [
+        "Auth/Verify"
+      ],
+      "summary": "Verifica o número de telefone com o código de verificação",
+      "responses": {
+        "200": {
+          "description": "Sucesso",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "Mensagem de confirmação de verificação do telefone"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Erro de validação",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "errors": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Código de erro"
+                        },
+                        "message": {
+                          "type": "string",
+                          "description": "Mensagem de erro"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+}

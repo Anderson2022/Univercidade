@@ -1,0 +1,340 @@
+{
+  "/courses": {
+    "get": {
+      "summary": "Listar todos os cursos",
+      "description": "Este endpoint lista todos os cursos cadastrados no sistema.",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "tags": [
+        "Cursos"
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "ID do curso"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome do curso"
+                    },
+                    "cover": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "URL da capa do curso"
+                    },
+                    "institution_id": {
+                      "type": "integer",
+                      "description": "ID da instituição"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Não autorizado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "description": "Mensagem de erro"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+    "tags": [
+      "Cursos"
+    ],
+    "summary": "Cria um novo curso.",
+    "requestBody": {
+      "content": {
+        "multipart/form-data": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Nome do curso.",
+                "example": "Inglês Básico"
+              },
+              "institutionId": {
+                "type": "integer",
+                "description": "ID da instituição responsável pelo curso.",
+                "example": 1
+              },
+              "cover": {
+                "type": "string",
+                "format": "binary",
+                "description": "Capa do curso."
+              }
+            },
+            "required": [
+              "name",
+              "institutionId",
+              "cover"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Curso criado com sucesso.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Course"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Erro na requisição."
+      },
+      "401": {
+        "description": "Usuário não autorizado."
+      },
+      "422": {
+        "description": "Erro de validação."
+      }
+    },
+
+  }
+  },
+  "/courses/{id}": {
+    "get": {
+      "tags": [
+        "Cursos"
+      ],
+      "summary": "Mostra os detalhes de um curso.",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "ID do curso.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Curso encontrado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Course"
+              },
+              "example": {
+                "id": 1,
+                "name": "Inclusão Digital",
+                "cover": null,
+                "institution_id": 1,
+                "institution": {
+                  "id": 1,
+                  "name": "Universidade Federal de São Paulo",
+                  "cnpj": "12345678901234",
+                  "created_at": "2022-05-01T15:25:00.000-03:00",
+                  "updated_at": "2022-05-01T15:25:00.000-03:00"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro na requisição."
+        },
+        "401": {
+          "description": "Usuário não autorizado."
+        },
+        "404": {
+          "description": "Curso não encontrado."
+        }
+      }
+    },
+    "put": {
+      "tags": [
+        "Cursos"
+      ],
+      "summary": "Atualiza um curso existente.",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "ID do curso.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "in": "formData",
+          "name": "name",
+          "description": "Nome do curso.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "formData",
+          "name": "institution_id",
+          "description": "ID da instituição a qual o curso pertence.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "in": "formData",
+          "name": "cover",
+          "description": "Capa do curso.",
+          "required": false,
+          "schema": {
+            "type": "file"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Curso atualizado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Course"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro na requisição."
+        },
+        "401": {
+          "description": "Usuário não autorizado."
+        },
+        "404": {
+          "description": "Curso não encontrado."
+        }
+      }
+    },
+    "delete": {
+      "tags": [
+        "Cursos"
+      ],
+      "summary": "Exclui um curso.",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "ID do curso.",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Curso excluído."
+        },
+        "401": {
+          "description": "Usuário não autorizado."
+        },
+        "404": {
+          "description": "Curso não encontrado."
+        }
+      }
+    }
+
+  },
+  "/coursesInstitution": {
+    "get": {
+      "tags": [
+        "Cursos"
+      ],
+      "summary": "Lista todas as instituições com seus cursos e turmas.",
+      "responses": {
+        "200": {
+          "description": "Instituições e seus cursos listados com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              },
+                "example": {
+                "id": 1,
+                "name": "Inclusão Digital",
+                "cover": null,
+                "institution_id": 1,
+                "institution": {
+                  "id": 1,
+                  "name": "Universidade Federal de São Paulo",
+                  "cnpj": "12345678901234",
+                  "created_at": "2022-05-01T15:25:00.000-03:00",
+                  "updated_at": "2022-05-01T15:25:00.000-03:00"
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Usuário não autorizado."
+        }
+      }
+    }
+  },
+
+
+    "components": {
+  "schemas": {
+    "Course": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID do curso."
+        },
+        "name": {
+          "type": "string",
+          "description": "Nome do curso."
+        },
+        "cover": {
+          "type": "string",
+          "description": "URL da imagem de capa do curso."
+        },
+        "institution_id": {
+          "type": "integer",
+          "description": "ID da instituição."
+        }
+      }
+    }
+  }
+}
+
+  }
+

@@ -1,0 +1,452 @@
+{
+"/institution": {
+  "get": {
+    "tags": [
+      "Institutions"
+    ],
+    "summary": "Retorna todas as instituições cadastradas.",
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+                "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "ID da instituição."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome da instituição."
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Data de criação da instituição."
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Data da última atualização da instituição."
+                    }
+                  }
+                }
+                }
+          }
+        }
+      },
+      "401": {
+        "description": "Não autorizado."
+      }
+    }
+  },
+   "post": {
+   "tags": [
+      "Institutions"
+    ],
+      "summary": "Cria uma nova instituição",
+      "description": "",
+      "operationId": "storeInstitution",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Objeto com informações da nova instituição",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/CreateInstitutionPayload"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Instituição criada com sucesso",
+          "schema": {
+            "$ref": "#/definitions/Institution"
+          }
+        },
+        "401": {
+          "description": "Não autorizado"
+        },
+        "403": {
+          "description": "Proibido"
+        },
+        "500": {
+          "description": "Erro interno do servidor"
+        }
+      }
+    }
+  },
+
+"/institution/{id}": {
+    "get": {
+  "tags": [
+      "Institutions"
+    ],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Obtém uma instituição pelo seu ID.",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "ID da instituição.",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Instituição encontrada.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "SENAI"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2023-04-13T10:57:47.000-04:00"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2023-04-13T10:57:47.000-04:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro na requisição.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "Erro na requisição."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Instituição não encontrada.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "Instituição não encontrada."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro interno do servidor.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "Erro interno do servidor."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "patch": {
+    "tags": [
+      "Institutions"
+    ],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Atualiza uma instituição",
+      "description": "Atualiza uma instituição existente com base no ID fornecido.",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "description": "ID da instituição a ser atualizada."
+          }
+        }
+      ],
+      "requestBody": {
+        "description": "Dados da instituição a serem atualizados.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateInstitutionPayload"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Instituição atualizada com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Institution"
+              }
+            }
+          }
+        },
+        "401": {
+          "$ref": "#/components/responses/Unauthorized"
+        },
+        "403": {
+          "$ref": "#/components/responses/Forbidden"
+        },
+        "404": {
+          "$ref": "#/components/responses/NotFound"
+        },
+        "500": {
+          "$ref": "#/components/responses/InternalServerError"
+        }
+      }
+    },
+
+     "delete": {
+       "tags": [
+      "Institutions"
+    ],
+      "summary": "Exclui uma instituição",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "ID da instituição",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Instituição excluída com sucesso"
+        },
+        "401": {
+          "$ref": "#/components/responses/Unauthorized"
+        },
+        "403": {
+          "$ref": "#/components/responses/Forbidden"
+        },
+        "404": {
+          "$ref": "#/components/responses/NotFound"
+        },
+        "500": {
+          "$ref": "#/components/responses/InternalServerError"
+        }
+      },
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+    }
+  },
+
+
+"components": {
+    "schemas": {
+      "Institution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "SENAI"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-04-13T10:57:47.000-04:00"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-04-13T10:57:47.000-04:00"
+          }
+        }
+      },
+      "UpdateInstitutionPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "SESI"
+          }
+        }
+      },
+      "CreateInstitutionPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "SESI"
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Usuário não autorizado."
+          }
+        }
+      },
+      "ForbiddenError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Usuário não tem permissão para executar essa ação."
+          }
+        }
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Turma não encontrada."
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Usuário não autorizado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UnauthorizedError"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Usuário não tem permissão para executar essa ação.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ForbiddenError"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Turma não encontrada.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotFoundError"
+            }
+          }
+        }
+      },
+      "Success": {
+        "description": "Operação realizada com sucesso.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Institution"
+            }
+          }
+        }
+      }
+    }
+  },
+
+"definitions": {
+  "CreateInstitutionPayload": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Nome da instituição"
+      }
+    }
+  },
+
+"Institution": {
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "ID da instituição."
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome da instituição."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data de criação da instituição."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data da última atualização da instituição."
+    }
+  }
+},
+
+}
+}

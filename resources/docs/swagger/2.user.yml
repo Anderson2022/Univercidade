@@ -1,0 +1,421 @@
+{
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+        "Users"
+      ],
+        "summary": "Retorna uma lista de usuários.",
+        "description": "Retorna todos os usuários, exceto aqueles com ID 2 e 3.\n",
+        "responses": {
+          "200": {
+            "description": "Lista de usuários recuperada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+              "tags": [
+        "Users"
+      ],
+        "summary": "Cria um novo usuário",
+        "description": "Cria um novo usuário e retorna seus dados.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro na solicitação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+
+    },
+     "/users/{id}": {
+      "get": {
+              "tags": [
+        "Users"
+      ],
+        "summary": "Retorna um usuário específico.",
+        "description": "Retorna o usuário correspondente ao ID especificado.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário a ser recuperado.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário recuperado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "ID do usuário."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome do usuário."
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "Email do usuário."
+                    }
+                  },
+                  "example": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "john.doe@example.com"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+              "tags": [
+        "Users"
+      ],
+      "summary": "Atualiza um usuário existente.",
+      "description": "Atualiza um usuário existente pelo seu ID.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID do usuário.",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      ],
+      "requestBody": {
+        "description": "Dados do usuário a serem atualizados.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateUser"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Usuário atualizado com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro ao atualizar o usuário.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "description": "Mensagem de erro."
+                  }
+                },
+                "example": {
+                  "error": "Erro ao atualizar o usuário."
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "$ref": "#/components/responses/UnauthorizedError"
+        },
+        "500": {
+          "$ref": "#/components/responses/InternalServerError"
+        }
+      },
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ]
+    },
+      "delete": {
+              "tags": [
+        "Users"
+      ],
+        "summary": "Exclui um usuário.",
+        "description": "Exclui um usuário com base em seu ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "ID do usuário."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usuário excluído com sucesso."
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+
+    },
+
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do usuário."
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do usuário."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email do usuário."
+          }
+        },
+        "example": {
+          "id": 1,
+          "name": "John Doe",
+          "email": "john.doe@example.com"
+        }
+      },
+       "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Mensagem de erro",
+            "example": "Senha inválida"
+          }
+        }
+      },
+      "UserData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do usuário",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "Endereço de email do usuário",
+            "example": "johndoe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Senha do usuário",
+            "example": "mypassword"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "UpdateUser":{
+         "type":"object",
+         "properties":{
+            "name":{
+               "type":"string",
+               "description":"Novo nome do usuário."
+            },
+            "email":{
+               "type":"string",
+               "description":"Novo email do usuário."
+            }
+         }
+      },
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Não autorizado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensagem de erro."
+                }
+              },
+              "example": {
+                "error": "Você não está autorizado a acessar esta API."
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Erro interno do servidor.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensagem de erro."
+                }
+              },
+              "example": {
+                "error": "Ocorreu um erro ao processar sua solicitação."
+              }
+            }
+          }
+        }
+      },
+      "BadRequestError": {
+        "description": "Erro na requisição.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensagem de erro."
+                }
+              },
+              "example": {
+                "error": "Houve um erro na requisição."
+              }
+            }
+          }
+        }
+      },
+      "NotFoundError": {
+        "description": "Usuário não encontrado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensagem de erro."
+                }
+              },
+              "example": {
+                "error": "Usuário não encontrado."
+              }
+            }
+          }
+        }
+      },
+
+    }
+  }
+
+}

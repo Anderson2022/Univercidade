@@ -1,0 +1,741 @@
+{
+  "/classes": {
+    "get": {
+      "summary": "Listar todas as turmas",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "tags": [
+        "Classes"
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array"
+              },
+              "example": [
+                {
+                  "id": 1,
+                  "weekday": "Segunda, Quarta e Sexta-feira",
+                  "time": "20h",
+                  "period": "Vespertino, 2023",
+                  "localite": "Senai",
+                  "start_date": "13:00",
+                  "end_date": "15:00",
+                  "quantity": 40,
+                  "course_id": 1,
+                  "created_at": "2023-04-14T14:08:44.000-04:00",
+                  "updated_at": "2023-04-14T14:08:44.000-04:00",
+                  "courses": {
+                    "id": 1,
+                    "name": "Inclusão Digital",
+                    "cover": null,
+                    "institution_id": 1,
+                    "created_at": "2023-04-14T14:08:44.000-04:00",
+                    "updated_at": "2023-04-14T14:08:44.000-04:00",
+                    "institution": {
+                      "id": 1,
+                      "name": "SENAI",
+                      "created_at": "2023-04-14T14:08:44.000-04:00",
+                      "updated_at": "2023-04-14T14:08:44.000-04:00"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "/classes/{id}": {
+    "get": {
+      "tags": [
+        "Classes"
+      ],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Exibe informações de uma turma",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID da turma a ser exibida",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "$ref": "#/definitions/Class"
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array"
+              },
+              "example": [
+                {
+                  "id": 1,
+                  "weekday": "Segunda, Quarta e Sexta-feira",
+                  "time": "20h",
+                  "period": "Vespertino, 2023",
+                  "localite": "Senai",
+                  "start_date": "13:00",
+                  "end_date": "15:00",
+                  "quantity": 40,
+                  "course_id": 1,
+                  "created_at": "2023-04-14T14:08:44.000-04:00",
+                  "updated_at": "2023-04-14T14:08:44.000-04:00",
+                  "courses": {
+                    "id": 1,
+                    "name": "Inclusão Digital",
+                    "cover": null,
+                    "institution_id": 1,
+                    "created_at": "2023-04-14T14:08:44.000-04:00",
+                    "updated_at": "2023-04-14T14:08:44.000-04:00",
+                    "institution": {
+                      "id": 1,
+                      "name": "SENAI",
+                      "created_at": "2023-04-14T14:08:44.000-04:00",
+                      "updated_at": "2023-04-14T14:08:44.000-04:00"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "400": {
+          "description": "Erro na requisição"
+        },
+        "404": {
+          "description": "Turma não encontrada"
+        },
+        "500": {
+          "description": "Erro interno do servidor"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Deleta uma turma",
+      "tags": [
+        "Classes"
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID da turma",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Turma deletada com sucesso",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Class"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Não autorizado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Turma não encontrada",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/classes/date": {
+    "get": {
+      "summary": "Buscar turmas por data de criação",
+      "tags": [
+        "Classes"
+      ],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "date",
+          "in": "query",
+          "description": "Data de criação das turmas no formato dd-MM-yyyy",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Retorna as turmas criadas na data especificada",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "ID da turma"
+                    },
+                    "weekday": {
+                      "type": "string",
+                      "description": "Dia da semana em que a turma ocorre"
+                    },
+                    "time": {
+                      "type": "string",
+                      "description": "Horário em que a turma ocorre"
+                    },
+                    "period": {
+                      "type": "string",
+                      "description": "Período em que a turma ocorre"
+                    },
+                    "localite": {
+                      "type": "string",
+                      "description": "Local onde a turma ocorre"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "description": "Data e horário de início da turma"
+                    },
+                    "end_date": {
+                      "type": "string",
+                      "description": "Data e horário de término da turma"
+                    },
+                    "quantity": {
+                      "type": "integer",
+                      "description": "Quantidade de alunos inscritos na turma"
+                    },
+                    "course_id": {
+                      "type": "integer",
+                      "description": "ID do curso relacionado à turma",
+                      "example": 1
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Data e hora de criação da turma"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Data e hora da última atualização da turma"
+                    },
+                    "courses": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID do curso"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Nome do curso"
+                        },
+                        "cover": {
+                          "type": "string",
+                          "description": "URL da imagem de capa do curso"
+                        },
+                        "institution_id": {
+                          "type": "integer",
+                          "description": "ID da instituição que oferece o curso",
+                          "example": 1
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "description": "Data e hora de criação do curso"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "description": "Data e hora da última atualização do curso"
+                        },
+                        "institution": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "ID da instituição"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Nome da instituição"
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Data de criação da instituição no formato ISO 8601"
+                            },
+                            "updated_at": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Data da última atualização da instituição no formato ISO 8601"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "Class": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID da turma"
+          },
+          "weekday": {
+            "type": "string",
+            "description": "Dias da semana em que a turma ocorre"
+          },
+          "time": {
+            "type": "string",
+            "description": "Horário de início da turma"
+          },
+          "period": {
+            "type": "string",
+            "description": "Período da turma (matutino, vespertino, noturno etc.)"
+          },
+          "localite": {
+            "type": "string",
+            "description": "Local onde a turma ocorre"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Data de início da turma"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Data de término da turma"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantidade de vagas na turma"
+          },
+          "course_id": {
+            "type": "integer",
+            "description": "ID do curso associado à turma"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Data de criação da turma"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Data da última atualização da turma"
+          },
+          "courses": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "ID do curso associado à turma"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome do curso associado à turma"
+              },
+              "cover": {
+                "type": "string",
+                "description": "Imagem de capa do curso associado à turma"
+              },
+              "institution_id": {
+                "type": "integer",
+                "description": "ID da instituição responsável pela turma."
+              },
+              "created_at": {
+                "type": "string",
+                "description": "Data de criação da turma no formato ISO 8601."
+              },
+              "updated_at": {
+                "type": "string",
+                "description": "Data da última atualização da turma no formato ISO 8601."
+              },
+              "courses": {
+                "type": "object",
+                "description": "Curso relacionado à turma.",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "ID do curso."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nome do curso."
+                  },
+                  "cover": {
+                    "type": "string",
+                    "description": "URL da imagem de capa do curso."
+                  },
+                  "institution_id": {
+                    "type": "integer",
+                    "description": "ID da instituição responsável pelo curso."
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "description": "Data de criação do curso no formato ISO 8601."
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "description": "Data da última atualização do curso no formato ISO 8601."
+                  },
+                  "institution": {
+                    "type": "object",
+                    "description": "Instituição responsável pelo curso.",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "ID da instituição."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Nome da instituição."
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "description": "Data de criação da instituição no formato ISO 8601."
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "description": "Data da última atualização da instituição no formato ISO 8601."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "classes": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID da turma.",
+            "example": 1
+          },
+          "weekday": {
+            "type": "string",
+            "description": "Dias da semana em que a aula ocorre.",
+            "example": "Segunda, Quarta e Sexta-feira"
+          },
+          "time": {
+            "type": "string",
+            "description": "Horário da aula.",
+            "example": "20h"
+          },
+          "period": {
+            "type": "string",
+            "description": "Período da aula.",
+            "example": "Vespertino, 2023"
+          },
+          "localite": {
+            "type": "string",
+            "description": "Local da aula.",
+            "example": "Senai"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Data e hora de início da aula.",
+            "example": "13:00"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Data e hora de término da aula.",
+            "example": "15:00"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantidade de alunos permitidos na turma.",
+            "example": 40
+          },
+          "course_id": {
+            "type": "integer",
+            "description": "ID do curso relacionado à turma.",
+            "example": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação da turma no formato ISO 8601.",
+            "example": "2023-04-14T14:08:44.000-04:00"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da última atualização da turma no formato ISO 8601.",
+            "example": "2023-04-14T14:08:44.000-04:00"
+          },
+          "courses": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "ID do curso relacionado à turma.",
+                "example": 1
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome do curso.",
+                "example": "Inclusão Digital"
+              },
+              "cover": {
+                "type": "string",
+                "nullable": true,
+                "description": "Caminho da imagem de capa do curso.",
+                "example": "https://example.com/images/course-cover.jpg"
+              },
+              "institution_id": {
+                "type": "integer",
+                "description": "ID da instituição responsável pelo curso.",
+                "example": 1
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Data de criação do curso no formato ISO 8601.",
+                "example": "2023-04-14T14:08:44.000-04:00"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Data da última atualização do curso no formato ISO 8601.",
+                "example": "2023-04-14T14:08:44.000-04:00"
+              },
+              "institution": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "ID da instituição.",
+                    "example": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da instituição.",
+                    "example": "SENAI"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data de criação da instituição no formato ISO 8601.",
+                    "example": "2023-04-14T14:08:44.000-04:00"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data da última atualização da instituição no formato ISO 8601.",
+                    "example": "2023-04-14T14:08:44.000-04:00"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/storeClasses": {
+    "post": {
+      "tags": [
+        "Classes"
+      ],
+      "summary": "Criar uma nova classe",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+
+            }
+          }
+        },
+        "required": true,
+        "description": "Objeto JSON contendo as informações da nova classe a ser criada."
+      },
+      "responses": {
+        "201": {
+          "description": "Classe criada com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+
+              },
+              "example": {
+                "id": 1,
+                "weekday": "Segunda, Quarta e Sexta-feira",
+                "time": "20h",
+                "period": "Vespertino, 2023",
+                "localite": "Senai",
+                "start_date": "13:00",
+                "end_date": "15:00",
+                "quantity": 40,
+                "course_id": 1,
+                "institution_id": 1,
+                "created_at": "2023-05-02T12:34:56.789Z",
+                "updated_at": "2023-05-02T12:34:56.789Z"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro na requisição.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              },
+              "example": {
+                "error": "Erro na requisição."
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Usuário não autorizado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              },
+              "example": {
+                "error": "Usuário não autorizado."
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro interno do servidor.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              },
+              "example": {
+                "error": "Erro interno do servidor."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/updateClasses/:id": {
+    "summary": "Atualizar uma turma existente.",
+    "tags": [
+      "Classes"
+    ],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "description": "ID da turma.",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    ],
+    "requestBody": {
+      "description": "Dados da turma a serem atualizados.",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ClassUpdate"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Turma atualizada com sucesso.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Class"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Erro na requisição.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Descrição do erro."
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Erro interno do servidor.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Descrição do erro."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

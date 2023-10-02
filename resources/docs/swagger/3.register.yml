@@ -1,0 +1,549 @@
+{
+  "/register": {
+    "get": {
+      "tags": [
+        "Register"
+      ],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Lista todos os estudantes",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Cria um novo estudante",
+      "tags": [
+        "Register"
+      ],
+      "parameters": [
+        {
+          "name": "request",
+          "in": "body",
+          "required": true,
+          "description": "Objeto contendo os dados do estudante",
+          "schema": {
+            "$ref": "#/components/schemas/CreateStudent"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentResponse"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Requisição inválida",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Não autorizado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Proibido",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro interno no servidor",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/cpfs": {
+    "post": {
+      "tags": [
+        "Register"
+      ],
+      "summary": "Verifica CPF e data de nascimento e retorna dados cadastrais.",
+      "operationId": "document",
+      "requestBody": {
+        "description": "Objeto de requisição.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DocumentRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentResponse"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad Request"
+        },
+        "409": {
+          "description": "Conflict",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/cep/{ceps}": {
+    "get": {
+      "tags": [
+        "Register"
+      ],
+      "summary": "Buscar informações de um CEP",
+      "description": "Retorna informações do CEP, como logradouro, bairro, cidade e estado.",
+      "parameters": [
+        {
+          "name": "ceps",
+          "in": "path",
+          "description": "CEP a ser buscado",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Retorna as informações do CEP",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cep": {
+                    "type": "string"
+                  },
+                  "logradouro": {
+                    "type": "string"
+                  },
+                  "bairro": {
+                    "type": "string"
+                  },
+                  "localidade": {
+                    "type": "string"
+                  },
+                  "uf": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "CEP não encontrado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro interno no servidor",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/classStudent": {
+    "post": {
+      "summary": "Associar um estudante a uma classe.",
+      "tags": [
+        "Register"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "description": "Objeto contendo as informações de associação do estudante à classe; Para que essa rota funcione devera cadastrar o estudante primeiro.",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/LinkCourseValidator"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Associação realizada com sucesso.",
+          "schema": {
+            "$ref": "#/definitions/ClassStudent"
+          }
+        },
+        "400": {
+          "description": "Solicitação inválida."
+        },
+        "401": {
+          "description": "Não autorizado."
+        },
+        "404": {
+          "description": "Estudante não encontrado."
+        },
+        "500": {
+          "description": "Erro interno no servidor."
+        }
+      }
+    }
+  },
+  "definitions": {
+    "LinkCourseValidator": {
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "integer",
+          "description": "ID do estudante.",
+          "example": 1
+        },
+        "classId": {
+          "type": "integer",
+          "description": "ID da classe.",
+          "example": 2
+        }
+      },
+      "required": [
+        "studentId",
+        "classId"
+      ]
+    },
+    "ClassStudent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID da associação entre o estudante e a classe.",
+          "example": 1
+        },
+        "studentId": {
+          "type": "integer",
+          "description": "ID do estudante.",
+          "example": 1
+        },
+        "classId": {
+          "type": "integer",
+          "description": "ID da classe.",
+          "example": 2
+        },
+        "status": {
+          "type": "string",
+          "description": "Status da associação entre o estudante e a classe.",
+          "example": "PENDING"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Data de criação da associação entre o estudante e a classe.",
+          "example": "2023-05-02T15:25:00.000Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Data de atualização da associação entre o estudante e a classe.",
+          "example": "2023-05-02T15:25:00.000Z"
+        },
+        "courses": {
+          "type": "array",
+          "description": "Array contendo os cursos da classe associada ao estudante.",
+          "items": {
+            "$ref": "#/definitions/Course"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "studentId",
+        "classId",
+        "status",
+        "created_at",
+        "updated_at",
+        "courses"
+      ]
+    },
+    "Course": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID do curso.",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Nome do curso.",
+          "example": "Programação para iniciantes"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição do curso.",
+          "example": "Curso para quem deseja iniciar na programação."
+        },
+        "teacher": {
+          "type": "string",
+          "description": "Nome do professor que ministra o curso.",
+          "example": "João Silva"
+        },
+        "duration": {
+          "type": "string",
+          "description": "Duração do curso.",
+          "example": "2 meses"
+        },
+        "price": {
+          "type": "number",
+          "description": "Preço do curso.",
+          "example": 120.5
+        }
+      }
+    },
+    "LinkCourseRequest": {
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "integer",
+          "description": "ID do estudante que deseja se inscrever no curso.",
+          "example": 1
+        },
+        "classId": {
+          "type": "integer",
+          "description": "ID da turma a qual o estudante deseja se inscrever.",
+          "example": 1
+        },
+        "courses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Course"
+          },
+          "description": "Lista de cursos que o estudante deseja se inscrever."
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Student": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "date_of_birth": {
+            "type": "string",
+            "format": "date"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "grade_level": {
+            "type": "string"
+          },
+          "job_situation": {
+            "type": "string"
+          },
+          "family_income": {
+            "type": "string"
+          },
+          "family_house_hold_size": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer"
+          },
+          "street": {
+            "type": "string"
+          },
+          "number": {
+            "type": "integer"
+          },
+          "neighborhood": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "zip_code": {
+            "type": "string"
+          },
+          "nis": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Class"
+            }
+          },
+          "example": [
+            {
+              "id": 1,
+              "weekday": "Segunda, Quarta e Sexta-feira",
+              "time": "20h",
+              "acronym": "IDig",
+              "period": "Vespertino, 2023",
+              "localite": "Senai",
+              "start_date": "13:00",
+              "end_date": "15:00",
+              "quantity": 40,
+              "course_id": 1,
+              "created_at": "2023-04-28T19:34:14.000+00:00",
+              "updated_at": "2023-04-28T19:34:14.000+00:00",
+              "courses": {
+                "id": 1,
+                "name": "Inclusão Digital",
+                "cover": null,
+                "institution_id": 1,
+                "created_at": "2023-04-28T19:34:14.000+00:00",
+                "updated_at": "2023-04-28T19:34:14.000+00:00",
+                "institution": {
+                  "id": 1,
+                  "name": "SENAI",
+                  "created_at": "2023-04-28T19:34:14.000+00:00",
+                  "updated_at": "2023-04-28T19:34:14.000+00:00"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "DocumentRequest": {
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "description": "CPF do estudante. Deve conter apenas números."
+          },
+          "data_de_nascimento": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de nascimento do estudante no formato dd/MM/yyyy."
+          }
+        },
+        "required": [
+          "cpf",
+          "data_de_nascimento"
+        ]
+      },
+      "DocumentResponse": {
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "description": "CPF do estudante. Deve conter apenas números."
+          },
+          "data_de_nascimento": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de nascimento do estudante no formato dd/MM/yyyy."
+          },
+          "nome_da_pf": {
+            "type": "string",
+            "description": "Nome completo do estudante."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Mensagem de erro."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

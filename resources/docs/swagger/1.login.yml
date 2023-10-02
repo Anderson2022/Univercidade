@@ -1,0 +1,198 @@
+{
+  "/sessionUser": {
+    "post": {
+      "tags": [
+        "Autenticação"
+      ],
+      "summary": "Autenticação do usuário pelo CPF.",
+      "description": "Realiza a autenticação do usuário utilizando o CPF.",
+      "requestBody": {
+        "description": "Objeto contendo o CPF do usuário.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "cpf": {
+                  "type": "string",
+                  "description": "CPF do usuário.",
+                  "example": "123.456.789-10"
+                }
+              },
+              "required": ["cpf"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Usuário autenticado com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "description": "Número de telefone do usuário.",
+                    "example": "+55 (11) 99999-9999"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nome do usuário.",
+                    "example": "João da Silva"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "CPF não encontrado."
+        }
+      }
+    },
+
+    "delete": {
+      "tags": ["Desconectar"],
+      "summary": "Deslogar usuário",
+      "security": [{"bearerAuth": []}],
+      "responses": {
+        "200": {
+          "description": "Operação bem sucedida"
+        }
+      }
+    }
+
+  },
+
+  "/sessionPhone": {
+  "post": {
+    "tags": [
+      "Autenticação"
+    ],
+    "summary": "Envia senha temporária para o usuário através do número de telefone.",
+    "description": "Envia uma senha temporária para o usuário cadastrado no sistema através do número de telefone informado. A senha será utilizada pelo usuário para fazer o login na aplicação. A senha gerada é uma sequência de 4 dígitos numéricos.",
+    "operationId": "loginPhone",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "phone": {
+                "type": "string",
+                "description": "Número de telefone do usuário.",
+                "example": "+5511987654321"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Senha temporária enviada com sucesso.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Mensagem de sucesso.",
+                  "example": "Senha enviada com sucesso."
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "CPF não encontrado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Mensagem de erro.",
+                  "example": "CPF não encontrado."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+
+  "/sessionPhoneLogin/:phone": {
+      "post": {
+      "tags": [
+        "Autenticação"
+      ],
+      "summary": "Realiza a autenticação do usuário com o número de telefone e senha.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "description": "Senha do usuário.",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Retorna o access_token e informações do usuário autenticado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "access_token": {
+                    "type": "string",
+                    "description": "Token de acesso gerado pela autenticação.",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTYyMjIzNzQ2MH0.IIWsTKod9ixCD2kWJWev7AOnpOZw0mkdMd1JjKmDlTs"
+                  },
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "ID do usuário autenticado.",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Nome do usuário autenticado.",
+                        "example": "João da Silva"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Retorna um erro indicando que as credenciais são inválidas."
+        }
+      }
+    }
+  }
+
+
+}
